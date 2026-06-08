@@ -10,7 +10,7 @@ import { useHistory } from './hooks/useHistory'
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('chat')
   const { models, loading: modelsLoading, error: modelsError, refresh, pickMultipleRandom } = useModels()
-  const { entries, upsertEntry, clearAll } = useHistory()
+  const { entries, upsertEntry, rateResult, clearAll } = useHistory()
 
   return (
     <div className="app">
@@ -30,7 +30,7 @@ export default function App() {
           />
         )}
         {activeTab === 'historique' && (
-          <HistoryPanel entries={entries} onClear={clearAll} />
+          <HistoryPanel entries={entries} onClear={clearAll} onRate={rateResult} />
         )}
         {activeTab === 'config' && (
           <ConfigPanel

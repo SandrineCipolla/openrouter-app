@@ -7,11 +7,13 @@ export interface Model {
 }
 
 export interface ModelResult {
+  id?: number
   model: string
   content: string
   status: 'success' | 'error'
   error?: string
   temperature?: number
+  rating?: number
 }
 
 export interface HistoryEntry {

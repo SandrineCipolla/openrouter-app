@@ -1,10 +1,9 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { ModelResult, HistoryEntry, Model } from '../types'
-import { sendSingleMessage, getApiKey } from '../api/openrouter'
+import { sendSingleMessage } from '../api/openrouter'
 
 interface SendContext {
   prompt: string
-  apiKey: string
 }
 
 interface EntryMeta {
@@ -174,7 +173,7 @@ export function ChatPanel({ models, pickMultipleRandom, onUpsertEntry }: Props) 
         return next
       })
 
-      sendSingleMessage(ctx.apiKey, modelId, ctx.prompt, temperature, controller.signal)
+      sendSingleMessage(modelId, ctx.prompt, temperature, controller.signal)
         .then((result) => {
           setCards((prev) => {
             const next = [...prev]
@@ -248,12 +247,6 @@ export function ChatPanel({ models, pickMultipleRandom, onUpsertEntry }: Props) 
     const trimmed = prompt.trim()
     if (!trimmed) return
 
-    const apiKey = getApiKey()
-    if (!apiKey) {
-      setError('Clé API manquante — configurez-la dans l\'onglet "config".')
-      return
-    }
-
     const selectedModels = pickMultipleRandom(modelCount)
     if (selectedModels.length === 0) {
       setError('Aucun modèle disponible.')
@@ -264,7 +257,7 @@ export function ChatPanel({ models, pickMultipleRandom, onUpsertEntry }: Props) 
     setPrompt('')
     textareaRef.current?.focus()
 
-    const ctx: SendContext = { prompt: trimmed, apiKey }
+    const ctx: SendContext = { prompt: trimmed }
     lastSendRef.current = ctx
     entryMetaRef.current = { id: crypto.randomUUID(), prompt: trimmed, timestamp: Date.now() }
 
