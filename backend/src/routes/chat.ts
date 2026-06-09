@@ -46,7 +46,12 @@ router.post('/', async (req: Request, res: Response) => {
 
   const data = await response.json() as {
     model: string
-    choices: { message: { content: string } }[]
+    choices?: { message: { content: string } }[]
+  }
+
+  if (!data.choices?.[0]?.message?.content) {
+    res.status(502).json({ error: `Réponse invalide du modèle : ${JSON.stringify(data)}` })
+    return
   }
 
   res.json({
